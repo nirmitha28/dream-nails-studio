@@ -1,0 +1,229 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Dream Nails Studio - Admin Login</title>
+
+  <link rel="stylesheet" href="/src/admin/admin.css">
+</head>
+
+<body>
+
+  <!-- ============================= -->
+  <!-- ADMIN LOGIN -->
+  <!-- ============================= -->
+
+  <div id="loginScreen" class="login-screen">
+
+    <div class="login-box">
+
+      <h2>🔐 Admin Login</h2>
+
+      <p>Dream Nails Studio</p>
+
+      <form id="loginForm">
+
+        <div class="login-group">
+
+          <label for="adminUsername">
+            Username
+          </label>
+
+          <input
+            type="text"
+            id="adminUsername"
+            placeholder="Enter username"
+            required
+          >
+
+        </div>
+
+
+        <div class="login-group">
+
+          <label for="adminPassword">
+            Password
+          </label>
+
+          <input
+            type="password"
+            id="adminPassword"
+            placeholder="Enter password"
+            required
+          >
+
+        </div>
+
+
+        <button
+          type="submit"
+          class="login-btn"
+        >
+          Login
+        </button>
+
+
+        <p id="loginMessage"></p>
+
+      </form>
+
+    </div>
+
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- ADMIN DASHBOARD -->
+  <!-- ============================= -->
+
+  <div id="adminDashboard" style="display: none;">
+
+    <header class="admin-header">
+
+      <div>
+        <h1>Dream Nails Studio</h1>
+        <p>Admin Dashboard</p>
+      </div>
+
+      <button
+        id="logoutBtn"
+        class="logout-btn"
+      >
+        🚪 Logout
+      </button>
+
+    </header>
+
+
+    <main class="admin-container">
+
+
+      <!-- ============================= -->
+      <!-- BOOKINGS -->
+      <!-- ============================= -->
+
+      <section class="dashboard-card">
+
+        <div class="section-heading">
+
+          <h2>📋 Customer Bookings</h2>
+
+          <button id="refreshBookings">
+            🔄 Refresh
+          </button>
+
+        </div>
+
+
+        <div id="bookingMessage"></div>
+
+
+        <div class="table-container">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Service</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Action</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody id="bookingTable">
+
+              <tr>
+
+                <td colspan="6">
+                  Loading bookings...
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+
+      <!-- ============================= -->
+      <!-- CUSTOMER FEEDBACK -->
+      <!-- ============================= -->
+
+      <section class="dashboard-card">
+
+        <div class="section-heading">
+
+          <h2>⭐ Customer Feedback</h2>
+
+          <button id="refreshFeedback">
+            🔄 Refresh
+          </button>
+
+        </div>
+
+
+        <div id="feedbackMessage"></div>
+
+
+        <div class="table-container">
+
+          <table>
+
+            <thead>
+
+              <tr>
+                <th>Name</th>
+                <th>Rating</th>
+                <th>Experience</th>
+                <th>Action</th>
+              </tr>
+
+            </thead>
+
+
+            <tbody id="feedbackTable">
+
+              <tr>
+
+                <td colspan="4">
+                  Loading feedback...
+                </td>
+
+              </tr>
+
+            </tbody>
+
+          </table>
+
+        </div>
+
+      </section>
+
+
+    </main>
+
+  </div>
+
+
+  <!-- ============================= -->
+  <!-- ADMIN JAVASCRIPT -->
+  <!-- ============================= -->
+
+  <script type="module" src="/src/admin/admin.js"></script>
+
+</body>
+</html>

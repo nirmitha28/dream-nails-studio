@@ -1,0 +1,82 @@
+.service-section {
+  padding: 50px 20px;
+  text-align: center;
+}
+
+/* Dream Nails Studio Logo */
+.service-logo {
+  margin-bottom: 20px;
+}
+
+.service-logo img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  border-radius: 50%;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.12);
+}
+
+.service-section h2 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.service-section > p {
+  margin-bottom: 30px;
+  color: #666;
+}
+
+.service-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: 1000px;
+  margin: auto;
+}
+
+.service-card {
+  padding: 25px;
+  border-radius: 15px;
+  border: 1px solid #ddd;
+  background: white;
+  transition: 0.3s;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.1);
+}
+
+.service-card h3 {
+  font-size: 21px;
+  margin-bottom: 15px;
+}
+
+.service-card p {
+  line-height: 1.5;
+  color: #666;
+}
+
+.service-card h4 {
+  margin-top: 20px;
+}
+
+@media (max-width: 768px) {
+
+  .service-section {
+    padding: 35px 20px;
+  }
+
+  .service-logo img {
+    width: 120px;
+    height: 120px;
+  }
+
+  .service-section h2 {
+    font-size: 27px;
+  }
+
+  .service-grid {
+    grid-template-columns: 1fr;
+  }
+}

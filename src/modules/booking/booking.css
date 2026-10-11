@@ -1,0 +1,119 @@
+.booking-section {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 40px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  position: relative;
+  z-index: 1;
+}
+
+/* Dream Nails Studio logo watermark */
+.booking-section::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 400px;
+  height: 400px;
+  background-image: url("/images/naillogo.jpeg");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  transform: translate(-50%, -50%);
+  opacity: 0.08;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.booking-section h2 {
+  text-align: center;
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.booking-section > p {
+  text-align: center;
+  color: #666;
+  margin-bottom: 30px;
+}
+
+.booking-form {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  font-family: inherit;
+  outline: none;
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #888;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.booking-form .form-group:nth-child(6) {
+  grid-column: 1 / 3;
+}
+
+.booking-btn {
+  grid-column: 1 / 3;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #222;
+  color: white;
+}
+
+.booking-btn:hover {
+  opacity: 0.85;
+}
+
+@media (max-width: 768px) {
+  .booking-section {
+    margin: 20px;
+    padding: 25px;
+  }
+
+  .booking-section::before {
+    width: 280px;
+    height: 280px;
+  }
+
+  .booking-form {
+    grid-template-columns: 1fr;
+  }
+
+  .booking-form .form-group:nth-child(6),
+  .booking-btn {
+    grid-column: 1;
+  }
+}

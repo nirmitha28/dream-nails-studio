@@ -1,0 +1,318 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f7f3f5;
+  color: #222;
+}
+
+/* HEADER */
+
+.ai-header {
+  text-align: center;
+  background: #111;
+  color: white;
+  padding: 22px 20px 25px;
+}
+
+.ai-header img {
+  width: 55px;
+  height: 55px;
+  object-fit: contain;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 10px;
+}
+
+.ai-header h1 {
+  font-size: 27px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.ai-header p {
+  font-size: 14px;
+  color: #ddd;
+}
+
+/* MAIN */
+
+.ai-container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 40px 20px 60px;
+}
+
+/* UPLOAD CARD */
+
+.upload-card {
+  max-width: 650px;
+  margin: 0 auto;
+  background: white;
+  padding: 35px;
+  border-radius: 18px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+
+.upload-card h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 25px;
+}
+
+/* UPLOAD BOX */
+
+.upload-box {
+  width: 100%;
+  min-height: 130px;
+  border: 2px dashed #aaa;
+  border-radius: 14px;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  text-align: center;
+  padding: 25px;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.upload-box:hover {
+  border-color: #222;
+  background: #fafafa;
+}
+
+.upload-box span {
+  font-size: 16px;
+  color: #555;
+}
+
+.upload-box input {
+  display: none;
+}
+
+/* IMAGE PREVIEW */
+
+.preview-container {
+  display: none;
+  text-align: center;
+  margin: 25px 0;
+}
+
+.preview-container img {
+  width: 220px;
+  height: 260px;
+  object-fit: cover;
+  border-radius: 14px;
+  border: 1px solid #ddd;
+}
+
+/* STYLE LABEL */
+
+.upload-card label:not(.upload-box) {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+/* SELECT */
+
+select {
+  width: 100%;
+  padding: 13px 14px;
+
+  border: 1px solid #ccc;
+  border-radius: 9px;
+
+  background: white;
+  font-size: 15px;
+
+  margin-bottom: 20px;
+  outline: none;
+}
+
+select:focus {
+  border-color: #555;
+}
+
+/* SUGGEST BUTTON */
+
+#suggestBtn {
+  width: 100%;
+  padding: 14px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: #111;
+  color: white;
+
+  font-size: 16px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+#suggestBtn:hover {
+  background: #333;
+  transform: translateY(-1px);
+}
+
+/* RESULT */
+
+.result {
+  margin-top: 40px;
+}
+
+.result h2 {
+  text-align: center;
+  font-size: 25px;
+  margin-bottom: 8px;
+}
+
+.result-subtitle {
+  text-align: center;
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 25px;
+}
+
+/* DESIGN GRID */
+
+.design-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+}
+
+/* DESIGN CARD */
+
+.design-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+
+  box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+
+  transition: 0.3s;
+}
+
+.design-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.13);
+}
+
+/* DESIGN IMAGE */
+
+.design-image {
+  width: 100%;
+  height: 280px;
+
+  object-fit: cover;
+  display: block;
+}
+
+/* CARD CONTENT */
+
+.design-card h3 {
+  font-size: 18px;
+  margin: 18px 18px 8px;
+}
+
+.design-card p {
+  color: #666;
+  font-size: 14px;
+  line-height: 1.5;
+
+  margin: 0 18px 18px;
+}
+
+/* BOOK BUTTON */
+
+.book-design-btn {
+  width: calc(100% - 36px);
+  margin: 0 18px 18px;
+
+  padding: 12px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: #111;
+  color: white;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.book-design-btn:hover {
+  background: #333;
+}
+
+/* ERROR */
+
+.error {
+  text-align: center;
+  color: #c62828;
+  font-weight: 600;
+  padding: 15px;
+  background: #fff0f0;
+  border-radius: 8px;
+}
+
+/* TABLET */
+
+@media (max-width: 850px) {
+  .design-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 600px) {
+
+  .ai-header {
+    padding: 18px 15px 22px;
+  }
+
+  .ai-header img {
+    width: 48px;
+    height: 48px;
+  }
+
+  .ai-header h1 {
+    font-size: 22px;
+  }
+
+  .ai-container {
+    padding: 25px 15px 40px;
+  }
+
+  .upload-card {
+    padding: 25px 18px;
+  }
+
+  .upload-card h2 {
+    font-size: 21px;
+  }
+
+  .design-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .design-image {
+    height: 300px;
+  }
+}

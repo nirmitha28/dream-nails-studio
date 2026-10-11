@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="./src/style.css">
+
+  <title>Dream Nails Studio - Services</title>
+</head>
+
+<body>
+
+  <nav>
+    <a href="home.html">Home</a>
+    <a href="services.html">Services</a>
+    <a href="gallery.html">Gallery</a>
+    <a href="booking.html">Booking</a>
+    <a href="feedback.html">Customer Feedback</a>
+    <a href="contact.html">Contact</a>
+  </nav>
+
+  <div id="app"></div>
+
+  <script type="module">
+    import { serviceModule } from './src/modules/service/service.js';
+    import './src/modules/service/service.css';
+
+    document.querySelector('#app').innerHTML = serviceModule();
+  </script>
+
+</body>
+</html>
+```
