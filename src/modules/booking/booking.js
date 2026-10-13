@@ -107,7 +107,7 @@ document.addEventListener("submit", async (event) => {
 
   try {
 
-    const response = await fetch("https://dream-nails-studio.onrender.com/api/bookings",  {
+    const response = await fetch("/api/bookings",   {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

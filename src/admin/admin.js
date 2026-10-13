@@ -1,279 +1,114 @@
 
-const API_URL = "https://dream-nails-studio.onrender.com";
 
+export function bookingModule() {
+  return `
+    <section class="booking-section">
+      <h2>💅 Book Your Nail Appointment</h2>
+      <p>Choose your service and preferred appointment time.</p>
 
-// ==================================================
-// ADMIN LOGIN
-// ==================================================
+      <form class="booking-form">
+        <div class="form-group">
+          <label for="name">Full Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Enter your name"
+            required
+          >
+        </div>
 
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "admin123";
+        <div class="form-group">
+          <label for="phone">Phone Number</label>
+          <input
+            type="tel"
+            id="phone"
+            name="phone"
+            placeholder="Enter your phone number"
+            required
+          >
+        </div>
 
-const loginScreen = document.getElementById("loginScreen");
-const adminDashboard = document.getElementById("adminDashboard");
-const loginForm = document.getElementById("loginForm");
-const loginMessage = document.getElementById("loginMessage");
-const logoutBtn = document.getElementById("logoutBtn");
+        <div class="form-group">
+          <label for="service">Select Service</label>
+          <select id="service" name="service" required>
+            <option value="">-- Select a service --</option>
+            <option value="Classic Nail Art">Classic Nail Art</option>
+            <option value="Gel Extensions">Gel Extensions</option>
+            <option value="Temporary Extensions">Temporary Extensions</option>
+            <option value="Custom Nail Art">Custom Nail Art</option>
+          </select>
+        </div>
 
+        <div class="form-group">
+          <label for="date">Appointment Date</label>
+          <input type="date" id="date" name="date" required>
+        </div>
 
-// ==================================================
-// CHECK LOGIN
-// ==================================================
+        <div class="form-group">
+          <label for="time">Preferred Time</label>
+          <input type="time" id="time" name="time" required>
+        </div>
 
-function checkLogin() {
+        <div class="form-group">
+          <label for="message">Special Request</label>
+          <textarea
+            id="message"
+            name="message"
+            rows="4"
+            placeholder="Tell us about your preferred nail design..."
+          ></textarea>
+        </div>
 
-  const loggedIn = sessionStorage.getItem("adminLoggedIn");
-
-  if (loggedIn === "true") {
-
-    loginScreen.style.display = "none";
-    adminDashboard.style.display = "block";
-
-    loadBookings();
-    loadFeedback();
-
-  } else {
-
-    loginScreen.style.display = "flex";
-    adminDashboard.style.display = "none";
-
-  }
+        <button type="submit" class="booking-btn">
+          Book Appointment
+        </button>
+      </form>
+    </section>
+  `;
 }
 
-
-// ==================================================
-// LOGIN
-// ==================================================
-
-loginForm.addEventListener("submit", function (event) {
+// Handle booking form submission
+document.addEventListener("submit", async (event) => {
+  if (!event.target.classList.contains("booking-form")) {
+    return;
+  }
 
   event.preventDefault();
 
-  const username =
-    document.getElementById("adminUsername").value.trim();
+  const form = event.target;
 
-  const password =
-    document.getElementById("adminPassword").value;
+  const bookingData = {
+    name: form.elements.name.value.trim(),
+    phone: form.elements.phone.value.trim(),
+    service: form.elements.service.value,
+    date: form.elements.date.value,
+    time: form.elements.time.value,
+    message: form.elements.message.value.trim()
+  };
 
-  if (
-    username === ADMIN_USERNAME &&
-    password === ADMIN_PASSWORD
-  ) {
+  try {
+    const response = await fetch("/api/bookings", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(bookingData)
+    });
 
-    sessionStorage.setItem(
-      "adminLoggedIn",
-      "true"
+    const result = await response.json();
+
+    if (response.ok) {
+      alert("✅ Appointment booked successfully!");
+      form.reset();
+    } else {
+      alert("❌ " + (result.message || "Booking failed."));
+    }
+  } catch (error) {
+    console.error("Booking connection error:", error);
+
+    alert(
+      "❌ Could not connect to the website server. Please try again."
     );
-
-    loginMessage.textContent =
-      "Login successful!";
-
-    loginMessage.style.color = "green";
-
-    setTimeout(() => {
-
-      loginScreen.style.display = "none";
-      adminDashboard.style.display = "block";
-
-      loadBookings();
-      loadFeedback();
-
-    }, 500);
-
-  } else {
-
-    loginMessage.textContent =
-      "Invalid username or password.";
-
-    loginMessage.style.color = "red";
-
   }
-
 });
-
-
-// ==================================================
-// LOGOUT
-// ==================================================
-
-logoutBtn.addEventListener("click", function () {
-
-  sessionStorage.removeItem("adminLoggedIn");
-
-  adminDashboard.style.display = "none";
-  loginScreen.style.display = "flex";
-
-  loginForm.reset();
-
-  loginMessage.textContent = "";
-
-});
-
-
-// ==================================================
-// LOAD BOOKINGS
-// ==================================================
-
-async function loadBookings() {
-
-  const table =
-    document.getElementById("bookingTable");
-
-  const message =
-    document.getElementById("bookingMessage");
-
-  table.innerHTML =
-    "<tr><td colspan='6'>Loading bookings...</td></tr>";
-
-  try {
-
-    const response =
-      await fetch(`${API_URL}/api/bookings`);
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch bookings");
-    }
-
-    const bookings =
-      await response.json();
-
-    if (bookings.length === 0) {
-
-      table.innerHTML =
-        "<tr><td colspan='6'>No bookings found.</td></tr>";
-
-      message.textContent = "";
-
-      return;
-    }
-
-    table.innerHTML = "";
-
-    bookings.forEach((booking) => {
-
-      const row =
-        document.createElement("tr");
-
-      row.innerHTML = `
-        <td>${booking.name}</td>
-        <td>${booking.phone}</td>
-        <td>${booking.service}</td>
-        <td>${booking.date}</td>
-        <td>${booking.time}</td>
-        <td>${booking.status || "Pending"}</td>
-      `;
-
-      table.appendChild(row);
-
-    });
-
-    message.textContent =
-      `${bookings.length} booking(s) found.`;
-
-  } catch (error) {
-
-    console.error("Booking error:", error);
-
-    table.innerHTML =
-      "<tr><td colspan='6'>Unable to load bookings.</td></tr>";
-
-    message.textContent =
-      "Make sure the backend server is running.";
-
-  }
-}
-
-
-// ==================================================
-// LOAD FEEDBACK
-// ==================================================
-
-async function loadFeedback() {
-
-  const table =
-    document.getElementById("feedbackTable");
-
-  const message =
-    document.getElementById("feedbackMessage");
-
-  table.innerHTML =
-    "<tr><td colspan='4'>Loading feedback...</td></tr>";
-
-  try {
-
-    const response =
-      await fetch(`${API_URL}/api/feedback`);
-
-    if (!response.ok) {
-      throw new Error("Failed to fetch feedback");
-    }
-
-    const feedbackList =
-      await response.json();
-
-    if (feedbackList.length === 0) {
-
-      table.innerHTML =
-        "<tr><td colspan='4'>No feedback found.</td></tr>";
-
-      message.textContent = "";
-
-      return;
-    }
-
-    table.innerHTML = "";
-
-    feedbackList.forEach((feedback) => {
-
-      const row =
-        document.createElement("tr");
-
-      const stars =
-        "⭐".repeat(feedback.rating);
-
-      row.innerHTML = `
-        <td>${feedback.name}</td>
-        <td>${stars}</td>
-        <td>${feedback.experience}</td>
-        <td>Feedback</td>
-      `;
-
-      table.appendChild(row);
-
-    });
-
-    message.textContent =
-      `${feedbackList.length} feedback item(s) found.`;
-
-  } catch (error) {
-
-    console.error("Feedback error:", error);
-
-    table.innerHTML =
-      "<tr><td colspan='4'>Unable to load feedback.</td></tr>";
-
-    message.textContent =
-      "Make sure the backend server is running.";
-
-  }
-}
-
-
-// ==================================================
-// REFRESH BUTTONS
-// ==================================================
-
-document
-  .getElementById("refreshBookings")
-  .addEventListener("click", loadBookings);
-
-document
-  .getElementById("refreshFeedback")
-  .addEventListener("click", loadFeedback);
-
-
-// ==================================================
-// START
-// ==================================================
-
-checkLogin();
