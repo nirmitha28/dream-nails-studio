@@ -1,3 +1,4 @@
+
 import "./ai.css";
 
 const handPhoto = document.getElementById("handPhoto");
@@ -8,223 +9,128 @@ const suggestBtn = document.getElementById("suggestBtn");
 const styleSelect = document.getElementById("style");
 const result = document.getElementById("result");
 
-handPhoto.addEventListener("change", function () {
+handPhoto.addEventListener("change", () => {
   const file = handPhoto.files[0];
 
   if (!file) return;
 
-  const imageURL = URL.createObjectURL(file);
-
-  previewImage.src = imageURL;
-  previewContainer.style.display = "block";
-  uploadText.textContent = "✅ Hand photo selected";
-});
-
-const designs = {
-  Any: [
-    {
-      name: "Elegant Nude",
-      image:
-        "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
-      description: "Soft nude nails with a clean and elegant finish."
-    },
-    {
-      name: "Modern French",
-      image:
-        "https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg",
-      description: "Classic French-inspired nails for an elegant look."
-    },
-    {
-      name: "Glossy Pink",
-      image:
-        "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg",
-      description: "Glossy pink nails for a simple and feminine style."
-    }
-  ],
-
-  Simple: [
-    {
-      name: "Minimal Nude",
-      image:
-        "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
-      description: "A simple nude design suitable for everyday wear."
-    },
-    {
-      name: "Natural Pink",
-      image:
-        "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg",
-      description: "Soft pink nails with a natural glossy finish."
-    },
-    {
-      name: "Clean White",
-      image:
-        "https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg",
-      description: "A clean and elegant white nail design."
-    }
-  ],
-
-  Glitter: [
-    {
-      name: "Glitter Glam",
-      image:
-        "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
-      description: "A glamorous glitter-inspired nail look."
-    },
-    {
-      name: "Rose Gold Style",
-      image:
-        "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg",
-      description: "Soft pink combined with a glamorous finish."
-    },
-    {
-      name: "Sparkle Nails",
-      image:
-        "https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg",
-      description: "A sparkling design for parties and special occasions."
-    }
-  ],
-
-  French: [
-    {
-      name: "Classic French Tips",
-      image:
-        "https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg",
-      description: "A timeless French-tip inspired design."
-    },
-    {
-      name: "Soft French",
-      image:
-        "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg",
-      description: "A soft and elegant French-inspired appearance."
-    },
-    {
-      name: "Modern French",
-      image:
-        "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
-      description: "A modern interpretation of the classic French style."
-    }
-  ],
-
-  Chrome: [
-    {
-      name: "Pearl Chrome",
-      image:
-        "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg",
-      description: "Glossy pearl-inspired chrome nails."
-    },
-    {
-      name: "Silver Chrome",
-      image:
-        "https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg",
-      description: "A modern metallic-inspired nail style."
-    },
-    {
-      name: "Glossy Chrome",
-      image:
-        "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
-      description: "A shiny and luxurious chrome-inspired finish."
-    }
-  ],
-
-  Bridal: [
-    {
-      name: "Bridal Elegance",
-      image:
-        "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
-      description: "Elegant soft tones suitable for bridal occasions."
-    },
-    {
-      name: "Bridal French",
-      image:
-        "https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg",
-      description: "A sophisticated French-inspired bridal look."
-    },
-    {
-      name: "Soft Bridal Pink",
-      image:
-        "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg",
-      description: "A delicate pink design for a bridal appearance."
-    }
-  ],
-
-  Floral: [
-    {
-      name: "Floral Elegance",
-      image:
-        "https://images.pexels.com/photos/704815/pexels-photo-704815.jpeg",
-      description: "A soft feminine look inspired by floral nail art."
-    },
-    {
-      name: "Pastel Floral",
-      image:
-        "https://images.pexels.com/photos/3997383/pexels-photo-3997383.jpeg",
-      description: "A gentle pastel-inspired floral style."
-    },
-    {
-      name: "Delicate Flowers",
-      image:
-        "https://images.pexels.com/photos/939835/pexels-photo-939835.jpeg",
-      description: "A delicate design inspired by floral details."
-    }
-  ]
-};
-
-suggestBtn.addEventListener("click", function () {
-  if (!handPhoto.files[0]) {
-    result.innerHTML = `
-      <p class="error">
-        ⚠️ Please upload a hand photo first.
-      </p>
-    `;
+  if (!file.type.startsWith("image/")) {
+    result.textContent = "Please select a valid image.";
+    handPhoto.value = "";
     return;
   }
 
-  const selectedStyle = styleSelect.value;
-  const selectedDesigns = designs[selectedStyle];
+  const imageURL = URL.createObjectURL(file);
+  previewImage.src = imageURL;
+  previewContainer.style.display = "block";
+  uploadText.textContent = "✅ Hand photo selected";
+  result.innerHTML = "";
+});
 
-  result.innerHTML = `
-    <h2>🤖 Recommended Nail Designs</h2>
-    <p class="result-subtitle">
-      Here are some designs matching your selected style.
-    </p>
+suggestBtn.addEventListener("click", async () => {
+  const file = handPhoto.files[0];
 
-    <div class="design-grid">
-      ${selectedDesigns
-        .map(
-          (design) => `
-            <div class="design-card">
+  if (!file) {
+    result.textContent = "⚠️ Please upload a hand photo first.";
+    return;
+  }
 
-              <img
-                src="${design.image}"
-                alt="${design.name}"
-                class="design-image"
-              >
+  // Keep the image size reasonable for the API.
+  if (file.size > 5 * 1024 * 1024) {
+    result.textContent = "Please choose an image smaller than 5 MB.";
+    return;
+  }
 
-              <h3>${design.name}</h3>
-
-              <p>${design.description}</p>
-
-              <button
-                class="book-design-btn"
-                data-design="${design.name}"
-              >
-                💅 Book This Design
-              </button>
-
-            </div>
-          `
-        )
-        .join("")}
-    </div>
-  `;
-
-  document.querySelectorAll(".book-design-btn").forEach((button) => {
-    button.addEventListener("click", function () {
-      const designName = this.dataset.design;
-
-      sessionStorage.setItem("selectedNailDesign", designName);
-
-      window.location.href = "/booking.html";
-    });
+  // Convert the selected photo to a Base64 data URL.
+  const image = await new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(new Error("Could not read the image."));
+    reader.readAsDataURL(file);
+  }).catch((error) => {
+    result.textContent = error.message;
+    return null;
   });
+
+  if (!image) return;
+
+  suggestBtn.disabled = true;
+  suggestBtn.textContent = "🤖 Analysing your photo...";
+  result.textContent = "Please wait while AI recommends your nail designs.";
+
+  try {
+    const response = await fetch("/api/ai/analyze", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        image,
+        style: styleSelect.value
+      })
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.message || "AI recommendation failed.");
+    }
+
+    if (!Array.isArray(data.recommendations)) {
+      throw new Error("The AI returned an unexpected response.");
+    }
+
+    result.replaceChildren();
+
+    const heading = document.createElement("h2");
+    heading.textContent = "🤖 Your AI Nail Recommendations";
+    result.appendChild(heading);
+
+    const analysis = document.createElement("p");
+    analysis.className = "result-subtitle";
+    analysis.textContent = data.analysis || "Recommendations based on your selected style.";
+    result.appendChild(analysis);
+
+    const grid = document.createElement("div");
+    grid.className = "design-grid";
+
+    data.recommendations.forEach((design) => {
+      const card = document.createElement("div");
+      card.className = "design-card";
+
+      const title = document.createElement("h3");
+      title.textContent = design.name || "Nail Design";
+
+      const shape = document.createElement("p");
+      shape.textContent = `Shape: ${design.shape || "Not specified"}`;
+
+      const length = document.createElement("p");
+      length.textContent = `Length: ${design.length || "Not specified"}`;
+
+      const description = document.createElement("p");
+      description.textContent = design.description || "";
+
+      const bookButton = document.createElement("button");
+      bookButton.className = "book-design-btn";
+      bookButton.textContent = "💅 Book This Design";
+
+      bookButton.addEventListener("click", () => {
+        sessionStorage.setItem(
+          "selectedNailDesign",
+          design.name || "AI Recommended Design"
+        );
+        window.location.href = "/booking.html";
+      });
+
+      card.append(title, shape, length, description, bookButton);
+      grid.appendChild(card);
+    });
+
+    result.appendChild(grid);
+  } catch (error) {
+    result.textContent = `⚠️ ${error.message} Please try again.`;
+  } finally {
+    suggestBtn.disabled = false;
+    suggestBtn.textContent = "🤖 Suggest Nail Design";
+  }
 });
