@@ -10,8 +10,6 @@ body {
   color: #222;
 }
 
-/* HEADER */
-
 .ai-header {
   text-align: center;
   background: #111;
@@ -39,17 +37,15 @@ body {
   color: #ddd;
 }
 
-/* MAIN */
-
 .ai-container {
+  width: 100%;
   max-width: 1100px;
   margin: auto;
   padding: 40px 20px 60px;
 }
 
-/* UPLOAD CARD */
-
 .upload-card {
+  width: 100%;
   max-width: 650px;
   margin: 0 auto;
   background: white;
@@ -64,21 +60,16 @@ body {
   margin-bottom: 25px;
 }
 
-/* UPLOAD BOX */
-
 .upload-box {
   width: 100%;
   min-height: 130px;
   border: 2px dashed #aaa;
   border-radius: 14px;
-
   display: flex;
   justify-content: center;
   align-items: center;
-
   text-align: center;
   padding: 25px;
-
   cursor: pointer;
   transition: 0.3s;
 }
@@ -97,8 +88,6 @@ body {
   display: none;
 }
 
-/* IMAGE PREVIEW */
-
 .preview-container {
   display: none;
   text-align: center;
@@ -113,8 +102,6 @@ body {
   border: 1px solid #ddd;
 }
 
-/* STYLE LABEL */
-
 .upload-card label:not(.upload-box) {
   display: block;
   font-size: 15px;
@@ -122,18 +109,13 @@ body {
   margin-bottom: 8px;
 }
 
-/* SELECT */
-
 select {
   width: 100%;
   padding: 13px 14px;
-
   border: 1px solid #ccc;
   border-radius: 9px;
-
   background: white;
   font-size: 15px;
-
   margin-bottom: 20px;
   outline: none;
 }
@@ -142,21 +124,15 @@ select:focus {
   border-color: #555;
 }
 
-/* SUGGEST BUTTON */
-
 #suggestBtn {
   width: 100%;
   padding: 14px;
-
   border: none;
   border-radius: 9px;
-
   background: #111;
   color: white;
-
   font-size: 16px;
   font-weight: 600;
-
   cursor: pointer;
   transition: 0.3s;
 }
@@ -166,12 +142,15 @@ select:focus {
   transform: translateY(-1px);
 }
 
-/* RESULT */
-
+/* RESULT AREA */
+#result,
 .result {
+  width: 100%;
+  max-width: 100%;
   margin-top: 40px;
 }
 
+#result h2,
 .result h2 {
   text-align: center;
   font-size: 25px;
@@ -186,22 +165,22 @@ select:focus {
 }
 
 /* DESIGN GRID */
-
 .design-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  width: 100%;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 22px;
+  align-items: stretch;
 }
 
 /* DESIGN CARD */
-
 .design-card {
+  min-width: 0;
+  width: 100%;
   background: white;
   border-radius: 16px;
   overflow: hidden;
-
   box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
-
   transition: 0.3s;
 }
 
@@ -210,18 +189,16 @@ select:focus {
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.13);
 }
 
-/* DESIGN IMAGE */
-
-.design-image {
+/* Match the class created by ai.js */
+.design-image,
+.design-gallery-image {
   width: 100%;
   height: 280px;
-
   object-fit: cover;
   display: block;
 }
 
 /* CARD CONTENT */
-
 .design-card h3 {
   font-size: 18px;
   margin: 18px 18px 8px;
@@ -231,27 +208,20 @@ select:focus {
   color: #666;
   font-size: 14px;
   line-height: 1.5;
-
   margin: 0 18px 18px;
 }
 
 /* BOOK BUTTON */
-
 .book-design-btn {
   width: calc(100% - 36px);
   margin: 0 18px 18px;
-
   padding: 12px;
-
   border: none;
   border-radius: 8px;
-
   background: #111;
   color: white;
-
   font-size: 14px;
   font-weight: 600;
-
   cursor: pointer;
   transition: 0.3s;
 }
@@ -259,8 +229,6 @@ select:focus {
 .book-design-btn:hover {
   background: #333;
 }
-
-/* ERROR */
 
 .error {
   text-align: center;
@@ -272,17 +240,14 @@ select:focus {
 }
 
 /* TABLET */
-
 @media (max-width: 850px) {
   .design-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 /* MOBILE */
-
 @media (max-width: 600px) {
-
   .ai-header {
     padding: 18px 15px 22px;
   }
@@ -312,7 +277,8 @@ select:focus {
     grid-template-columns: 1fr;
   }
 
-  .design-image {
+  .design-image,
+  .design-gallery-image {
     height: 300px;
   }
 }

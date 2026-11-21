@@ -2,228 +2,249 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dream Nails Studio - Admin</title>
 
-  <title>Dream Nails Studio - Admin Login</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
 
-  <link rel="stylesheet" href="/src/admin/admin.css">
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f7f1f4;
+      color: #29212a;
+    }
+
+    .container {
+      width: min(100% - 30px, 1000px);
+      margin: 30px auto;
+    }
+
+    .panel {
+      background: #fff;
+      padding: 24px;
+      border-radius: 14px;
+      box-shadow: 0 4px 20px #00000012;
+      margin-bottom: 24px;
+    }
+
+    h1, h2 {
+      color: #7c365a;
+    }
+
+    input, button, select, textarea {
+      font: inherit;
+      padding: 11px;
+      margin: 6px 0;
+      width: 100%;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+    }
+
+    button {
+      cursor: pointer;
+      background: #8d4268;
+      color: white;
+      border: 0;
+    }
+
+    button:hover {
+      background: #713452;
+    }
+
+    .secondary {
+      background: #555;
+    }
+
+    .danger {
+      background: #b83232;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .message {
+      margin: 10px 0;
+      color: #8d4268;
+      overflow-wrap: anywhere;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 700px;
+    }
+
+    th, td {
+      border: 1px solid #eee;
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f8edf3;
+    }
+
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+    }
+
+    .gallery-card {
+      border: 1px solid #eee;
+      border-radius: 10px;
+      padding: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .gallery-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+
+    .gallery-card button {
+      margin-top: 10px;
+    }
+
+    .small-text {
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
 </head>
 
 <body>
+  <main class="container">
+    <h1>💅 Dream Nails Studio Admin</h1>
 
-  <!-- ============================= -->
-  <!-- ADMIN LOGIN -->
-  <!-- ============================= -->
-
-  <div id="loginScreen" class="login-screen">
-
-    <div class="login-box">
-
-      <h2>🔐 Admin Login</h2>
-
-      <p>Dream Nails Studio</p>
+    <!-- LOGIN -->
+    <section id="loginBox" class="panel">
+      <h2>Admin Login</h2>
 
       <form id="loginForm">
+        <label for="username">Username</label>
+        <input
+          type="text"
+          id="username"
+          name="username"
+          placeholder="Enter admin username"
+          autocomplete="username"
+          required
+        />
 
-        <div class="login-group">
+        <label for="password">Password</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          placeholder="Enter admin password"
+          autocomplete="current-password"
+          required
+        />
 
-          <label for="adminUsername">
-            Username
-          </label>
-
-          <input
-            type="text"
-            id="adminUsername"
-            placeholder="Enter username"
-            required
-          >
-
-        </div>
-
-
-        <div class="login-group">
-
-          <label for="adminPassword">
-            Password
-          </label>
-
-          <input
-            type="password"
-            id="adminPassword"
-            placeholder="Enter password"
-            required
-          >
-
-        </div>
-
-
-        <button
-          type="submit"
-          class="login-btn"
-        >
-          Login
-        </button>
-
-
-        <p id="loginMessage"></p>
-
+        <button type="submit">Login</button>
       </form>
 
-    </div>
+      <p id="loginMessage" class="message" role="status"></p>
+    </section>
 
-  </div>
+    <!-- ADMIN DASHBOARD -->
+    <section id="dashboard" class="hidden">
+      <div class="panel">
+        <h2>Booking Dashboard</h2>
+        <p class="small-text">View bookings and update their status.</p>
 
+        <button id="refreshButton" type="button">Refresh Bookings</button>
+        <button id="logoutButton" type="button" class="secondary">Logout</button>
 
-  <!-- ============================= -->
-  <!-- ADMIN DASHBOARD -->
-  <!-- ============================= -->
+        <p id="dashboardMessage" class="message" role="status"></p>
 
-  <div id="adminDashboard" style="display: none;">
-
-    <header class="admin-header">
-
-      <div>
-        <h1>Dream Nails Studio</h1>
-        <p>Admin Dashboard</p>
-      </div>
-
-      <button
-        id="logoutBtn"
-        class="logout-btn"
-      >
-        🚪 Logout
-      </button>
-
-    </header>
-
-
-    <main class="admin-container">
-
-
-      <!-- ============================= -->
-      <!-- BOOKINGS -->
-      <!-- ============================= -->
-
-      <section class="dashboard-card">
-
-        <div class="section-heading">
-
-          <h2>📋 Customer Bookings</h2>
-
-          <button id="refreshBookings">
-            🔄 Refresh
-          </button>
-
-        </div>
-
-
-        <div id="bookingMessage"></div>
-
-
-        <div class="table-container">
-
+        <div class="table-wrap">
           <table>
-
             <thead>
-
               <tr>
-                <th>Name</th>
-                <th>Phone</th>
+                <th>Customer</th>
                 <th>Service</th>
                 <th>Date</th>
                 <th>Time</th>
-                <th>Action</th>
+                <th>Payment</th>
+                <th>Status</th>
+                <th>Actions</th>
               </tr>
-
             </thead>
-
-
-            <tbody id="bookingTable">
-
+            <tbody id="bookingRows">
               <tr>
-
-                <td colspan="6">
-                  Loading bookings...
-                </td>
-
+                <td colspan="7">Bookings will appear here.</td>
               </tr>
-
             </tbody>
-
           </table>
-
         </div>
+      </div>
 
-      </section>
+      <!-- GALLERY UPLOAD -->
+      <div class="panel">
+        <h2>Upload Gallery Image</h2>
 
+        <form id="galleryUploadForm">
+          <label for="galleryTitle">Image Title</label>
+          <input
+            type="text"
+            id="galleryTitle"
+            name="title"
+            placeholder="Example: Pink floral nail art"
+            required
+          />
 
+          <label for="galleryDescription">Description (optional)</label>
+          <textarea
+            id="galleryDescription"
+            name="description"
+            rows="3"
+            placeholder="Write a short description"
+          ></textarea>
 
-      <!-- ============================= -->
-      <!-- CUSTOMER FEEDBACK -->
-      <!-- ============================= -->
+          <label for="galleryImage">Choose Image</label>
+          <input
+            type="file"
+            id="galleryImage"
+            name="image"
+            accept="image/*"
+            required
+          />
 
-      <section class="dashboard-card">
+          <button id="galleryUploadButton" type="submit">Upload Image</button>
+        </form>
 
-        <div class="section-heading">
+        <p id="galleryMessage" class="message" role="status"></p>
+      </div>
 
-          <h2>⭐ Customer Feedback</h2>
+      <!-- GALLERY MANAGEMENT -->
+      <div class="panel">
+        <h2>Manage Gallery Images</h2>
 
-          <button id="refreshFeedback">
-            🔄 Refresh
-          </button>
+        <button id="refreshGalleryButton" type="button">Refresh Gallery</button>
 
-        </div>
+        <p id="adminGalleryEmptyMessage" class="message" role="status">
+          Gallery images will appear here.
+        </p>
 
-
-        <div id="feedbackMessage"></div>
-
-
-        <div class="table-container">
-
-          <table>
-
-            <thead>
-
-              <tr>
-                <th>Name</th>
-                <th>Rating</th>
-                <th>Experience</th>
-                <th>Action</th>
-              </tr>
-
-            </thead>
-
-
-            <tbody id="feedbackTable">
-
-              <tr>
-
-                <td colspan="4">
-                  Loading feedback...
-                </td>
-
-              </tr>
-
-            </tbody>
-
-          </table>
-
-        </div>
-
-      </section>
-
-
-    </main>
-
-  </div>
-
-
-  <!-- ============================= -->
-  <!-- ADMIN JAVASCRIPT -->
-  <!-- ============================= -->
+        <div id="adminGalleryGrid" class="gallery-grid"></div>
+      </div>
+    </section>
+  </main>
 
   <script type="module" src="/src/admin/admin.js"></script>
-
 </body>
 </html>

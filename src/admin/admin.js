@@ -1,114 +1,330 @@
 
+const ADMIN_USERNAME = "admin";
+const ADMIN_PASSWORD = "DreamNails@2026";
 
-export function bookingModule() {
-  return `
-    <section class="booking-section">
-      <h2>💅 Book Your Nail Appointment</h2>
-      <p>Choose your service and preferred appointment time.</p>
+const API_URL =
+  window.location.hostname === "localhost"
+    ? "http://localhost:5000"
+    : window.location.origin;
 
-      <form class="booking-form">
-        <div class="form-group">
-          <label for="name">Full Name</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            placeholder="Enter your name"
-            required
-          >
-        </div>
+const $ = (id) => document.getElementById(id);
 
-        <div class="form-group">
-          <label for="phone">Phone Number</label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            placeholder="Enter your phone number"
-            required
-          >
-        </div>
+const loginBox = $("loginBox");
+const dashboard = $("dashboard");
+const loginForm = $("loginForm");
+const loginMessage = $("loginMessage");
+const dashboardMessage = $("dashboardMessage");
+const bookingRows = $("bookingRows");
 
-        <div class="form-group">
-          <label for="service">Select Service</label>
-          <select id="service" name="service" required>
-            <option value="">-- Select a service --</option>
-            <option value="Classic Nail Art">Classic Nail Art</option>
-            <option value="Gel Extensions">Gel Extensions</option>
-            <option value="Temporary Extensions">Temporary Extensions</option>
-            <option value="Custom Nail Art">Custom Nail Art</option>
-          </select>
-        </div>
+const galleryUploadForm = $("galleryUploadForm");
+const galleryTitle = $("galleryTitle");
+const galleryDescription = $("galleryDescription");
+const galleryImage = $("galleryImage");
+const galleryUploadButton = $("galleryUploadButton");
+const galleryMessage = $("galleryMessage");
+const adminGalleryGrid = $("adminGalleryGrid");
+const adminGalleryEmptyMessage = $("adminGalleryEmptyMessage");
 
-        <div class="form-group">
-          <label for="date">Appointment Date</label>
-          <input type="date" id="date" name="date" required>
-        </div>
+const refreshButton = $("refreshButton");
+const refreshGalleryButton = $("refreshGalleryButton");
 
-        <div class="form-group">
-          <label for="time">Preferred Time</label>
-          <input type="time" id="time" name="time" required>
-        </div>
+// LOGIN
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
 
-        <div class="form-group">
-          <label for="message">Special Request</label>
-          <textarea
-            id="message"
-            name="message"
-            rows="4"
-            placeholder="Tell us about your preferred nail design..."
-          ></textarea>
-        </div>
+  const username = $("username").value.trim();
+  const password = $("password").value;
 
-        <button type="submit" class="booking-btn">
-          Book Appointment
-        </button>
-      </form>
-    </section>
-  `;
-}
-
-// Handle booking form submission
-document.addEventListener("submit", async (event) => {
-  if (!event.target.classList.contains("booking-form")) {
+  if (username !== ADMIN_USERNAME || password !== ADMIN_PASSWORD) {
+    loginMessage.textContent = "Incorrect username or password.";
     return;
   }
 
-  event.preventDefault();
+  loginMessage.textContent = "";
+  loginBox.classList.add("hidden");
+  dashboard.classList.remove("hidden");
 
-  const form = event.target;
+  await Promise.all([loadBookings(), loadAdminGallery()]);
+});
 
-  const bookingData = {
-    name: form.elements.name.value.trim(),
-    phone: form.elements.phone.value.trim(),
-    service: form.elements.service.value,
-    date: form.elements.date.value,
-    time: form.elements.time.value,
-    message: form.elements.message.value.trim()
-  };
+// REFRESH BOOKINGS
+refreshButton.addEventListener("click", async () => {
+  refreshButton.disabled = true;
+  dashboardMessage.textContent = "Refreshing bookings...";
+
+  await loadBookings();
+
+  refreshButton.disabled = false;
+});
+
+// REFRESH GALLERY
+refreshGalleryButton.addEventListener("click", async () => {
+  refreshGalleryButton.disabled = true;
+  adminGalleryEmptyMessage.textContent = "Refreshing gallery...";
+
+  await loadAdminGallery();
+
+  refreshGalleryButton.disabled = false;
+});
+
+// LOGOUT
+$("logoutButton").addEventListener("click", () => {
+  dashboard.classList.add("hidden");
+  loginBox.classList.remove("hidden");
+  loginForm.reset();
+  bookingRows.replaceChildren();
+  adminGalleryGrid.replaceChildren();
+  dashboardMessage.textContent = "";
+  galleryMessage.textContent = "";
+  loginMessage.textContent = "";
+});
+
+// BOOKINGS
+async function loadBookings() {
+  dashboardMessage.textContent = "Loading bookings...";
+  bookingRows.replaceChildren();
 
   try {
-    const response = await fetch("/api/bookings", {
+    const response = await fetch(`${API_URL}/api/bookings`);
+    const bookings = await response.json();
+
+    if (!response.ok) {
+      throw new Error(bookings.message || "Unable to load bookings.");
+    }
+
+    if (!Array.isArray(bookings)) {
+      throw new Error("Unexpected booking data received.");
+    }
+
+    if (bookings.length === 0) {
+      dashboardMessage.textContent = "No bookings found.";
+      return;
+    }
+
+    dashboardMessage.textContent = `${bookings.length} booking(s) found.`;
+
+    bookings.forEach((booking) => {
+      const row = document.createElement("tr");
+
+      addCell(row, booking.name);
+      addCell(row, booking.service);
+      addCell(row, booking.date);
+      addCell(row, booking.time);
+      addCell(
+        row,
+        `Total: ₹${booking.totalPrice ?? "-"} | Advance: ₹${booking.advanceAmount ?? "-"} | Balance: ₹${booking.remainingBalance ?? "-"}`
+      );
+
+      const statusCell = document.createElement("td");
+      const statusSelect = document.createElement("select");
+      const statuses = ["Pending", "Confirmed", "Completed", "Cancelled"];
+
+      statuses.forEach((status) => {
+        const option = document.createElement("option");
+        option.value = status;
+        option.textContent = status;
+        statusSelect.appendChild(option);
+      });
+
+      statusSelect.value = statuses.includes(booking.status)
+        ? booking.status
+        : "Pending";
+
+      statusSelect.addEventListener("change", async () => {
+        statusSelect.disabled = true;
+
+        try {
+          const response = await fetch(
+            `${API_URL}/api/bookings/${encodeURIComponent(booking._id)}/status`,
+            {
+              method: "PUT",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ status: statusSelect.value })
+            }
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Unable to update status.");
+          }
+
+          const updatedStatus = statusSelect.value;
+          await loadBookings();
+          dashboardMessage.textContent = `Status updated to ${updatedStatus}.`;
+        } catch (error) {
+          alert(`Status update failed: ${error.message}`);
+          await loadBookings();
+        }
+      });
+
+      statusCell.appendChild(statusSelect);
+      row.appendChild(statusCell);
+
+      const actionCell = document.createElement("td");
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete";
+
+      deleteButton.addEventListener("click", async () => {
+        if (!confirm("Permanently delete this booking?")) return;
+
+        deleteButton.disabled = true;
+
+        try {
+          const response = await fetch(
+            `${API_URL}/api/bookings/${encodeURIComponent(booking._id)}`,
+            { method: "DELETE" }
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Unable to delete booking.");
+          }
+
+          await loadBookings();
+          dashboardMessage.textContent = "Booking deleted successfully.";
+        } catch (error) {
+          alert(`Delete failed: ${error.message}`);
+          deleteButton.disabled = false;
+        }
+      });
+
+      actionCell.appendChild(deleteButton);
+      row.appendChild(actionCell);
+      bookingRows.appendChild(row);
+    });
+  } catch (error) {
+    console.error("Bookings error:", error);
+    dashboardMessage.textContent =
+      `${error.message} Check that the backend is running.`;
+  }
+}
+
+// GALLERY UPLOAD
+galleryUploadForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const title = galleryTitle.value.trim();
+  const description = galleryDescription.value.trim();
+  const file = galleryImage.files[0];
+
+  if (!title || !file) {
+    galleryMessage.textContent = "Enter a title and choose an image.";
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("description", description);
+  formData.append("image", file);
+
+  galleryUploadButton.disabled = true;
+  galleryMessage.textContent = "Uploading image...";
+
+  try {
+    const response = await fetch(`${API_URL}/api/gallery`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify(bookingData)
+      body: formData
     });
 
-    const result = await response.json();
+    const data = await response.json();
 
-    if (response.ok) {
-      alert("✅ Appointment booked successfully!");
-      form.reset();
-    } else {
-      alert("❌ " + (result.message || "Booking failed."));
+    if (!response.ok) {
+      throw new Error(data.message || "Upload failed.");
     }
-  } catch (error) {
-    console.error("Booking connection error:", error);
 
-    alert(
-      "❌ Could not connect to the website server. Please try again."
-    );
+    galleryUploadForm.reset();
+    galleryMessage.textContent = "Image uploaded successfully!";
+    await loadAdminGallery();
+  } catch (error) {
+    console.error("Gallery upload error:", error);
+    galleryMessage.textContent = error.message;
+  } finally {
+    galleryUploadButton.disabled = false;
   }
 });
+
+// LOAD GALLERY
+async function loadAdminGallery() {
+  adminGalleryGrid.replaceChildren();
+  adminGalleryEmptyMessage.textContent = "Loading gallery...";
+
+  try {
+    const response = await fetch(`${API_URL}/api/gallery`);
+    const images = await response.json();
+
+    if (!response.ok) {
+      throw new Error(images.message || "Unable to load gallery.");
+    }
+
+    if (!Array.isArray(images) || images.length === 0) {
+      adminGalleryEmptyMessage.textContent = "No uploaded images yet.";
+      return;
+    }
+
+    adminGalleryEmptyMessage.textContent = "";
+
+    images.forEach((image) => {
+      const card = document.createElement("div");
+      card.className = "gallery-card";
+
+      const img = document.createElement("img");
+      img.src = image.imageUrl.startsWith("http")
+        ? image.imageUrl
+        : `${API_URL}${image.imageUrl}`;
+      img.alt = image.title || "Gallery image";
+      img.loading = "lazy";
+
+      const title = document.createElement("h3");
+      title.textContent = image.title || "Untitled";
+
+      const description = document.createElement("p");
+      description.textContent = image.description || "";
+
+      const deleteButton = document.createElement("button");
+      deleteButton.type = "button";
+      deleteButton.textContent = "Delete Image";
+
+      deleteButton.addEventListener("click", async () => {
+        if (!confirm(`Delete "${image.title || "this image"}"?`)) return;
+
+        deleteButton.disabled = true;
+
+        try {
+          const response = await fetch(
+            `${API_URL}/api/gallery/${encodeURIComponent(image._id)}`,
+            { method: "DELETE" }
+          );
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.message || "Unable to delete image.");
+          }
+
+          galleryMessage.textContent = "Gallery image deleted.";
+          await loadAdminGallery();
+        } catch (error) {
+          alert(`Delete failed: ${error.message}`);
+          deleteButton.disabled = false;
+        }
+      });
+
+      card.append(img, title, description, deleteButton);
+      adminGalleryGrid.appendChild(card);
+    });
+  } catch (error) {
+    console.error("Gallery loading error:", error);
+    adminGalleryEmptyMessage.textContent =
+      `${error.message} Check the backend connection.`;
+  }
+}
+
+// HELPER
+function addCell(row, value) {
+  const cell = document.createElement("td");
+  cell.textContent = value ?? "";
+  row.appendChild(cell);
+}
